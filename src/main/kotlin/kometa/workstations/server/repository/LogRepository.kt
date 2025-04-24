@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 @RepositoryRestResource
 interface LogRepository : JpaRepository<Log, Long> {
-    fun findByUserLdapUid(userLdapUid: String): List<Log>
+    fun findByUsername(userLdapUid: String): List<Log>
     fun findByEntityTypeAndEntityId(entityType: String?, entityId: Long?): List<Log>
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service import org.springframework.transac
     }
 
     fun findByUserUsername(userUsername: String): List<Log> {
-        return repository.findByUserLdapUid(userUsername)
+        return repository.findByUsername(userUsername)
     }
 
     fun findByEntityTypeAndEntityId(entityType: String?, entityId: Long?): List<Log> {
