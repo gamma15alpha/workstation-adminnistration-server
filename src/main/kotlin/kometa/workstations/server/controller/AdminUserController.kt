@@ -1,4 +1,4 @@
-package kometa.workstations.server.controller.admin
+package kometa.workstations.server.controller
 
 import kometa.workstations.server.model.User
 import kometa.workstations.server.repository.RoleRepository

@@ -13,30 +13,30 @@
 
     <!-- Логотип по ролям -->
     <div class="text-xl font-bold text-gray-900">
-      <a th:href="@{/}"
-         sec:authorize="hasRole('ADMIN')"
-         class="hover:text-blue-600">Админ-панель</a>
-      <a th:href="@{/}"
-         sec:authorize="hasRole('MANAGER')"
-         class="hover:text-green-600">Панель менеджера</a>
-      <a th:href="@{/}"
-         sec:authorize="hasRole('ENGINEER')"
-         class="hover:text-purple-600">Система инженера</a>
-      <a th:href="@{/}"
-         sec:authorize="isAnonymous()"
-         class="hover:text-gray-600">Гостевой доступ</a>
+      <a th:href="@{/}" sec:authorize="hasRole('ADMIN')" class="hover:text-blue-600">Админ-панель</a>
+      <a th:href="@{/}" sec:authorize="hasRole('MANAGER')" class="hover:text-green-600">Панель менеджера</a>
+      <a th:href="@{/}" sec:authorize="hasRole('ENGINEER')" class="hover:text-purple-600">Станции инженера</a>
+      <a th:href="@{/}" sec:authorize="isAnonymous()" class="hover:text-gray-600">Гость</a>
     </div>
 
-    <!-- Центр: навигация -->
+    <!-- Навигация по ролям -->
     <div class="space-x-4 text-center text-base font-medium">
-      <a th:href="@{/admin/users}" class="text-blue-600 hover:text-blue-800"
-         sec:authorize="hasRole('ADMIN')">Пользователи</a>
 
-      <a th:href="@{/admin/reports}" class="text-blue-600 hover:text-blue-800"
-         sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">Отчёты</a>
+      <!-- Общая вкладка для инженера и админа -->
+      <a th:href="@{/workstations}" class="text-blue-600 hover:text-blue-800"
+         sec:authorize="hasAnyRole('ENGINEER', 'ADMIN')">Рабочие станции</a>
+
+      <!-- Менеджер тоже видит рабочие станции -->
+      <a th:href="@{/workstations}" class="text-blue-600 hover:text-blue-800"
+         sec:authorize="hasRole('MANAGER')">Просмотр станций</a>
+
+      <!-- ПО доступно всем ролям, но только админ может редактировать -->
+      <a th:href="@{/software}" class="text-blue-600 hover:text-blue-800"
+         sec:authorize="hasAnyRole('ADMIN', 'ENGINEER', 'MANAGER')">Программное обеспечение</a>
+
     </div>
 
-    <!-- Правая часть: логин/профиль -->
+    <!-- Авторизация -->
     <div>
       <a th:href="@{/login}" class="text-blue-600 hover:text-blue-800"
          sec:authorize="isAnonymous()">Войти</a>

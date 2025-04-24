@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Рабочие станции</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Рабочие станции</h1>
+
+    <!-- Форма поиска -->
+    <form method="get" th:action="@{/workstations}" class="mb-4 flex gap-4">
+        <input type="text" name="search" placeholder="Имя или инвентарный номер"
+               th:value="${param.search}" class="p-2 border rounded bg-gray-50 text-gray-900 w-full"/>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Поиск</button>
+    </form>
+
+    <!-- Таблица станций -->
+    <table class="w-full bg-white rounded shadow-md">
+        <thead class="bg-gray-200">
+        <tr>
+            <th class="p-2 text-left">ID</th>
+            <th class="p-2 text-left">Имя</th>
+            <th class="p-2 text-left">Инв. номер</th>
+            <th class="p-2 text-left">Пользователь</th>
+            <th class="p-2 text-left">Локация</th>
+            <th class="p-2 text-left">Дата</th>
+            <th class="p-2 text-left">Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ws : ${workstations}">
+            <td class="p-2" th:text="${ws.id}">1</td>
+            <td class="p-2" th:text="${ws.name}">ПК1</td>
+            <td class="p-2" th:text="${ws.inventoryNumber}">INV001</td>
+            <td class="p-2" th:text="${ws.assignedUserUid}">uid123</td>
+            <td class="p-2" th:text="${ws.location.name}">Офис</td>
+            <td class="p-2" th:text="${#temporals.format(ws.createdAt, 'dd.MM.yyyy')}"></td>
+            <td class="p-2 space-x-2">
+                <a th:href="@{'/workstations/view/' + ${ws.id}}" class="text-blue-600 hover:underline">Просмотр</a>
+
+                <a th:href="@{'/requests/new?workstation=' + ${ws.id}}"
+                   sec:authorize="hasRole('MANAGER')"
+                   class="text-green-600 hover:underline">Создать заявку</a>
+
+                <a th:href="@{'/workstations/edit/' + ${ws.id}}"
+                   sec:authorize="hasAnyRole('ENGINEER', 'ADMIN')"
+                   class="text-yellow-600 hover:underline">Редактировать</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

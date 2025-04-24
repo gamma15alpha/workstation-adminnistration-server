@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${software.id != null} ? 'Редактировать ПО' : 'Добавить ПО'">Форма ПО</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4" th:text="${software.id != null} ? 'Редактирование ПО' : 'Добавление ПО'"></h1>
+
+  <form th:action="@{/software/save}" th:object="${software}" method="post" class="bg-white p-6 rounded shadow-md">
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="mb-4">
+      <label class="block text-gray-700">Название ПО</label>
+      <input type="text" th:field="*{name}" required class="w-full p-2 border rounded bg-gray-50" />
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700">Версия</label>
+      <input type="text" th:field="*{version}" required class="w-full p-2 border rounded bg-gray-50" />
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700">Лицензионный ключ</label>
+      <input type="text" th:field="*{licenseKey}" class="w-full p-2 border rounded bg-gray-50" />
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700">Количество лицензий</label>
+      <input type="number" min="0" th:field="*{licenseCount}" required class="w-full p-2 border rounded bg-gray-50" />
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700">Срок действия лицензии</label>
+      <input type="date" th:field="*{expirationDate}" class="w-full p-2 border rounded bg-gray-50" />
+      <p class="text-sm text-gray-500 mt-1">Оставьте пустым, если лицензия бессрочная.</p>
+    </div>
+
+
+    <div class="flex gap-4">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Сохранить</button>
+      <a th:href="@{/software}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Отмена</a>
+    </div>
+  </form>
+</div>
+</body>
+</html>

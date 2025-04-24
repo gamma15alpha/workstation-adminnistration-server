@@ -30,7 +30,8 @@ class SecurityConfig {
                         "/images/**",
                         "/actuator/**",
                         "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/v3/api-docs/**",
+                        "/"
                     ).permitAll()
                     .anyRequest().authenticated()
             }
@@ -45,6 +46,16 @@ class SecurityConfig {
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/login?logout")
                     .permitAll()
+            }
+            .sessionManagement { session ->
+                session
+                    .maximumSessions(1)
+                    .maxSessionsPreventsLogin(false)
+            }
+            .sessionManagement { session ->
+                session
+                    .sessionFixation().migrateSession()
+                    .invalidSessionUrl("/login?expired")
             }
             .csrf { csrf -> csrf.disable() }
         return http.build()
