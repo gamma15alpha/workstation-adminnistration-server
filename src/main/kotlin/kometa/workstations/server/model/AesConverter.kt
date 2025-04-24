@@ -2,6 +2,7 @@ package kometa.workstations.server.model
 
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 import java.util.*
@@ -10,11 +11,13 @@ import javax.crypto.spec.SecretKeySpec
 
 @Converter
 @Component
-class AesConverter(private val environment: Environment) : AttributeConverter<String, String> {
-    private val key: ByteArray
-        get() = environment.getProperty("AES_KEY")?.toByteArray()
-            ?: throw IllegalStateException("AES_KEY not configured")
+class AesConverter(
+    @Value("\${encryption.aes-key}") private val aesKey: String
+) : AttributeConverter<String, String> {
+
     private val algorithm = "AES"
+    private val key: ByteArray
+        get() = aesKey.toByteArray()
 
     override fun convertToDatabaseColumn(attribute: String?): String? {
         if (attribute == null) return null
