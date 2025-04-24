@@ -26,5 +26,14 @@ class Software(
     val licenseCount: Int,
 
     @Column
-    val installationDate: LocalDate?
-)
+    val expirationDate: LocalDate?
+){
+    constructor() : this(
+        id = null,
+        name = "",
+        version = "",
+        licenseKey = "",
+        licenseCount = 0,
+        expirationDate = null
+    )
+}

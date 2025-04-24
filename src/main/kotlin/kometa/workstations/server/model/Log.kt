@@ -13,7 +13,7 @@ class Log(
     val id: Long? = null,
 
     @Column(nullable = false)
-    val userLdapUid: String,
+    val username: String,
 
     @Column(nullable = false)
     val action: String,
@@ -29,4 +29,14 @@ class Log(
 
     @Column
     val isDeleted: Boolean = false
-)
+){
+    constructor() : this(
+        id = null,
+        username = "",
+        action = "",
+        entityType = null,
+        entityId = null,
+        timestamp = LocalDateTime.now(),
+        isDeleted = false
+    )
+}

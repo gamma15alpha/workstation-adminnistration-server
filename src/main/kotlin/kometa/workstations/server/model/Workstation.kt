@@ -30,4 +30,15 @@ class Workstation(
 
     @Column(nullable = false)
     val updatedAt: LocalDateTime = LocalDateTime.now()
-)
+){
+    constructor() : this(
+        id = null,
+        name = "",
+        inventoryNumber = "",
+        location = Location(),
+        assignedUserUid = "",
+        createdAt = LocalDateTime.now(),
+        updatedAt = LocalDateTime.now()
+    )
+
+}

@@ -16,4 +16,11 @@ class Location(
 
     @Column
     val address: String?
-)
+){
+    constructor() : this(
+        id = null,
+        name = "",
+        address = ""
+    )
+
+}

@@ -22,4 +22,11 @@ class WorkstationSoftware(
 
     @Column
     val installationDate: LocalDate?
-)
+){
+    constructor() : this(
+        id = null,
+        workstation = Workstation(),
+        software = Software(),
+        installationDate = LocalDate.now()
+    )
+}

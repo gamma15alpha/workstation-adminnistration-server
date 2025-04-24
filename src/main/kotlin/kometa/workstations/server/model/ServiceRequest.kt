@@ -34,6 +34,17 @@ class ServiceRequest(
 
     @Column
     val updatedAt: LocalDateTime?
-)
+){
+    constructor() : this (
+        id = null,
+        workstation = Workstation(),
+        requesterUid = "",
+        assignedEngineerUid = "",
+        status = RequestStatus.CLOSED,
+        description = "",
+        createdAt = LocalDateTime.now(),
+        updatedAt = LocalDateTime.now()
+    )
+}
 
 enum class RequestStatus { OPEN, IN_PROGRESS, COMPLETED, CLOSED }
