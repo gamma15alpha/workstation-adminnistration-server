@@ -2,6 +2,8 @@ package kometa.workstations.server.controller
 
 import kometa.workstations.server.model.Software
 import kometa.workstations.server.service.SoftwareService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,14 +20,26 @@ class SoftwareController(
 ) {
 
     @GetMapping
-    fun list(@RequestParam(required = false) search: String?, model: Model): String {
-        val softwareList = if (search.isNullOrBlank())
-            softwareService.findAll()
-        else
-            softwareService.findByName(search)
-        model.addAttribute("softwareList", softwareList)
+    fun list(
+        @RequestParam(defaultValue = "") search: String,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "name") sortBy: String,
+        @RequestParam(defaultValue = "asc") sortDir: String,
+        model: Model
+    ): String {
+        val sort = Sort.by(if (sortDir == "asc") Sort.Direction.ASC else Sort.Direction.DESC, sortBy)
+        val pageable = PageRequest.of(page, size, sort)
+        val softwarePage = softwareService.findByNamePaginated(search, pageable)
+
+        model.addAttribute("softwarePage", softwarePage)
+        model.addAttribute("currentPage", page)
+        model.addAttribute("search", search)
+        model.addAttribute("sortBy", sortBy)
+        model.addAttribute("sortDir", sortDir)
         return "software-list"
     }
+
 
     @GetMapping("/new")
     fun newSoftware(model: Model): String {

@@ -22,8 +22,8 @@ class Software(
     @Convert(converter = AesConverter::class)
     val licenseKey: String?,
 
-    @Column(nullable = false)
-    val licenseCount: Int,
+    @Column
+    val licenseCount: Int?,
 
     @Column
     val expirationDate: LocalDate?
@@ -32,8 +32,8 @@ class Software(
         id = null,
         name = "",
         version = "",
-        licenseKey = "",
-        licenseCount = 0,
+        licenseKey = null,
+        licenseCount = null,
         expirationDate = null
     )
 }

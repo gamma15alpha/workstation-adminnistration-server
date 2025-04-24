@@ -25,13 +25,15 @@
     </div>
 
     <div class="mb-4">
-      <label class="block text-gray-700">Лицензионный ключ</label>
-      <input type="text" th:field="*{licenseKey}" class="w-full p-2 border rounded bg-gray-50" />
+      <label class="block text-gray-700">Ключ лицензии</label>
+      <input type="text" th:field="*{licenseKey}" class="w-full p-2 border rounded bg-gray-50"
+             placeholder="Оставьте пустым, если не требуется" />
     </div>
 
     <div class="mb-4">
       <label class="block text-gray-700">Количество лицензий</label>
-      <input type="number" min="0" th:field="*{licenseCount}" required class="w-full p-2 border rounded bg-gray-50" />
+      <input type="number" min="0" th:field="*{licenseCount}" class="w-full p-2 border rounded bg-gray-50"
+             placeholder="Оставьте пустым если нет ограничения по количеству" />
     </div>
 
     <div class="mb-4">
@@ -48,4 +50,8 @@
   </form>
 </div>
 </body>
+
+<footer>
+  <div th:replace="~{footer :: footer}"></div>
+</footer>
 </html>

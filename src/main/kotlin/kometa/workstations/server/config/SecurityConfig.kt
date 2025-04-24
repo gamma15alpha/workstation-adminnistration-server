@@ -20,8 +20,8 @@ class SecurityConfig {
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/api/engineer/**").hasRole("ENGINEER")
-                    .requestMatchers("/api/manager/**").hasRole("MANAGER")
+//                    .requestMatchers("/api/engineer/**").hasRole("ENGINEER")
+//                    .requestMatchers("/api/manager/**").hasRole("MANAGER")
                     .requestMatchers(
                         "/login",
                         "/register",
@@ -31,14 +31,15 @@ class SecurityConfig {
                         "/actuator/**",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
-                        "/"
+                        "/",
+                        "/index"
                     ).permitAll()
                     .anyRequest().authenticated()
             }
             .formLogin { form ->
                 form
                     .loginPage("/login")
-                    .defaultSuccessUrl("/admin/users", true)
+                    .defaultSuccessUrl("/", true)
                     .permitAll()
             }
             .logout { logout ->

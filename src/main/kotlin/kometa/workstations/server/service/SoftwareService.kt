@@ -4,6 +4,8 @@ import kometa.workstations.server.model.Software
 import kometa.workstations.server.repository.SoftwareRepository
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -23,6 +25,12 @@ class SoftwareService(private val repository: SoftwareRepository) {
     fun findByName(name: String): List<Software> {
         return repository.findByNameContainingIgnoreCase(name)
     }
+
+    @Cacheable("software")
+    fun findByNamePaginated(name: String, pageable: Pageable): Page<Software> {
+        return repository.findByNameContainingIgnoreCase(name, pageable)
+    }
+
 
     @Transactional
     @CacheEvict(value = ["software"], allEntries = true)
