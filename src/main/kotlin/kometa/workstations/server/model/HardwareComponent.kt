@@ -27,6 +27,15 @@ class HardwareComponent(
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     val status: ComponentStatus
-)
+){
+    constructor() : this(
+        id = null,
+        workstation = Workstation(),
+        type = "",
+        model = "",
+        serialNumber = null,
+        status = ComponentStatus.INACTIVE
+    )
+}
 
 enum class ComponentStatus { ACTIVE, INACTIVE, BROKEN }
