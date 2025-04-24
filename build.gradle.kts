@@ -19,26 +19,44 @@ repositories {
 }
 
 dependencies {
+    // Web
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation ("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation ("org.springframework.boot:spring-boot-starter-data-rest")
-    implementation ("org.springframework.boot:spring-boot-starter-security")
-    implementation ("org.postgresql:postgresql")
-    implementation ("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation ("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation ("io.lettuce:lettuce-core:6.4.0.RELEASE")
-    compileOnly ("org.projectlombok:lombok")
-    annotationProcessor ("org.projectlombok:lombok")
-    implementation ("io.micrometer:micrometer-registry-prometheus")
-    implementation ("org.springframework.boot:spring-boot-starter-actuator")
-    implementation ("org.jetbrains.kotlin:kotlin-reflect")
-    implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.github.cdimascio:java-dotenv:5.2.2")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
-    testImplementation ("org.springframework.boot:spring-boot-starter-test")
-    testImplementation ("org.springframework.security:spring-security-test")
-    testRuntimeOnly ("org.junit.platform:junit-platform-launcher")
+
+    // Security
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    testImplementation("org.springframework.security:spring-security-test")
+
+    // Data
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-rest")
+    implementation("org.postgresql:postgresql")
+
+    // Redis (временно отключить, если не нужен)
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("io.lettuce:lettuce-core:6.4.0.RELEASE")
+
+    // Мониторинг / Метрики
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
+    //️ Утилиты
+    implementation("io.github.cdimascio:java-dotenv:5.2.2")
+
+    // Kotlin
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    //️ Lombok
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+
+    // Тестирование
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
+
 
 kotlin {
     compilerOptions {
