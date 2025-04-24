@@ -12,10 +12,14 @@ class Role(
     val id: Long? = null,
 
     @Column(nullable = false, unique = true)
-    val name: String // ROLE_ADMIN, ROLE_ENGINEER, ROLE_MANAGER
+    val name: String, // ROLE_ADMIN, ROLE_ENGINEER, ROLE_MANAGER
+
+    @Column(nullable = false)
+    val description: String
 ) {
     constructor() : this(
         null,
+        "",
         ""
     )
 }

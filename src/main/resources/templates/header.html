@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -8,12 +8,43 @@
   </style>
 </head>
 <body>
-<header th:fragment="header" class="bg-white p-4 shadow-md">
-  <nav class="container mx-auto flex justify-between items-center">
-    <h1 class="text-xl font-bold">Админ-панель</h1>
+<header th:fragment="header" class="bg-white shadow-md">
+  <nav class="container mx-auto flex justify-between items-center p-4">
+
+    <!-- Логотип по ролям -->
+    <div class="text-xl font-bold text-gray-900">
+      <a th:href="@{/}"
+         sec:authorize="hasRole('ADMIN')"
+         class="hover:text-blue-600">Админ-панель</a>
+      <a th:href="@{/}"
+         sec:authorize="hasRole('MANAGER')"
+         class="hover:text-green-600">Панель менеджера</a>
+      <a th:href="@{/}"
+         sec:authorize="hasRole('ENGINEER')"
+         class="hover:text-purple-600">Система инженера</a>
+      <a th:href="@{/}"
+         sec:authorize="isAnonymous()"
+         class="hover:text-gray-600">Гостевой доступ</a>
+    </div>
+
+    <!-- Центр: навигация -->
+    <div class="space-x-4 text-center text-base font-medium">
+      <a th:href="@{/admin/users}" class="text-blue-600 hover:text-blue-800"
+         sec:authorize="hasRole('ADMIN')">Пользователи</a>
+
+      <a th:href="@{/admin/reports}" class="text-blue-600 hover:text-blue-800"
+         sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">Отчёты</a>
+    </div>
+
+    <!-- Правая часть: логин/профиль -->
     <div>
-      <a th:href="@{/admin/users}" class="text-blue-600 hover:text-blue-800 mx-2">Пользователи</a>
-      <a th:href="@{/logout}" class="text-blue-600 hover:text-blue-800 mx-2">Выход</a>
+      <a th:href="@{/login}" class="text-blue-600 hover:text-blue-800"
+         sec:authorize="isAnonymous()">Войти</a>
+
+      <span class="text-gray-700" sec:authorize="isAuthenticated()" th:text="${#authentication.name}">username</span>
+
+      <a th:href="@{/logout}" class="text-red-600 hover:text-red-800 ml-3"
+         sec:authorize="isAuthenticated()">Выход</a>
     </div>
   </nav>
 </header>

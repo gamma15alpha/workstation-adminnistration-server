@@ -30,7 +30,7 @@
       <label class="block text-gray-700">Роли</label>
       <div th:each="role : ${availableRoles}">
         <input type="checkbox" th:field="*{roles}" th:value="${role.id}" />
-        <label th:text="${role.name}"></label>
+        <label th:text="${role.description}"></label>
       </div>
     </div>
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Сохранить</button>

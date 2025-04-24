@@ -16,7 +16,7 @@ interface UserRepository : JpaRepository<User, Long> {
     WHERE (:username IS NULL OR u.username LIKE %:username%)
     AND (:enabled IS NULL OR u.enabled = :enabled)
     AND (:role IS NULL OR EXISTS (
-        SELECT 1 FROM u.roles r WHERE r.name LIKE %:role%
+        SELECT 1 FROM u.roles r WHERE r.description LIKE %:role%
     ))
 """)
     fun findFiltered(username: String?, enabled: Boolean?, role: String?, pageable: Pageable): Page<User>

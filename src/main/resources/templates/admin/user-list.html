@@ -59,7 +59,7 @@
       <td class="p-2" th:text="${user.username}"></td>
       <td class="p-2">
         <span th:each="role, iterStat : ${user.roles}">
-          <span th:text="${role.name}"></span><span th:if="${!iterStat.last}">, </span>
+          <span th:text="${role.description}"></span><span th:if="${!iterStat.last}">, </span>
         </span>
       </td>
       <td class="p-2" th:text="${user.enabled ? 'Активен' : 'Неактивен'}"></td>
