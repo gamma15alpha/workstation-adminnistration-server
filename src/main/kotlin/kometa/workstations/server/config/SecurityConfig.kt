@@ -32,7 +32,10 @@ class SecurityConfig {
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/",
-                        "/index"
+                        "/index",
+                        "/service-requests/new",
+                        "/service-requests/save",
+                        "/api/workstations/searchByUserUUID"
                     ).permitAll()
                     .anyRequest().authenticated()
             }

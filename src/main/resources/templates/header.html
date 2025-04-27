@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -29,6 +30,11 @@
         Программное обеспечение
       </a>
 
+      <a th:href="@{/hardware-components}" class="text-blue-600 hover:text-blue-800"
+         sec:authorize="hasAnyRole('ADMIN', 'ENGINEER', 'MANAGER')">
+        Аппаратные компоненты
+      </a>
+
       <!-- Выпадающее меню "Управление" только для ADMIN -->
       <div class="relative" sec:authorize="hasRole('ADMIN')">
         <button id="managementToggle" class="flex items-center text-blue-600 hover:text-blue-800 focus:outline-none">
@@ -45,9 +51,6 @@
           </a>
           <a th:href="@{/locations}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full">
             Локации
-          </a>
-          <a th:href="@{/hardware-components}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full">
-            Аппаратные компоненты
           </a>
         </div>
       </div>

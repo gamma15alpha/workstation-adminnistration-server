@@ -33,7 +33,7 @@ class WorkstationService(private val repository: WorkstationRepository) {
 
     @Cacheable("workstations")
     fun findByAssignedUser(assignedUser: String): List<Workstation> {
-        return repository.findByAssignedUserUid(assignedUser)
+        return repository.findByAssignedUserUidContainingIgnoreCase(assignedUser)
     }
 
     @Transactional

@@ -20,4 +20,6 @@ interface UserRepository : JpaRepository<User, Long> {
     ))
 """)
     fun findFiltered(username: String?, enabled: Boolean?, role: String?, pageable: Pageable): Page<User>
+
+    fun findByUsernameContainingIgnoreCase(username: String): List<User>
 }

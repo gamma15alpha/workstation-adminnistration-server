@@ -42,9 +42,15 @@
             <td class="p-2" th:text="${ws.assignedUserUid ?: '—'}"></td>
             <td class="p-2" th:text="${ws.location.name ?: '—'}"></td>
             <td class="p-2 space-x-2">
+                <a th:href="@{'/workstations/view/' + ${ws.id}}"
+                   class="text-blue-600 hover:underline">
+                    Посмотреть
+                </a>
+
                 <!-- Редактировать доступно Admin или владельцу -->
-                <a th:href="@{'/workstations/edit/' + ${ws.id}}" class="text-yellow-600 hover:underline"
-                   th:if="${isAdmin or ws.assignedUserUid == #authentication.name}">
+                <a th:href="@{'/workstations/edit/' + ${ws.id}}"
+                   class="text-yellow-600 hover:underline"
+                   sec:authorize="hasAnyRole('ADMIN', 'ENGINEER')">
                     Редактировать
                 </a>
 

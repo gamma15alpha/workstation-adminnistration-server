@@ -26,7 +26,7 @@ class HardwareComponent(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val status: ComponentStatus
+    var status: ComponentStatus
 ){
     constructor() : this(
         id = null,

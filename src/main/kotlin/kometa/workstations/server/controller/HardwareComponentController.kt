@@ -54,8 +54,6 @@ class HardwareComponentController(
         return "hardware-component-list"
     }
 
-
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
     fun newComponent(model: Model): String {

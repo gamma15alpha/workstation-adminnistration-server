@@ -13,8 +13,8 @@ class ServiceRequest(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workstation_id", nullable = false)
-    val workstation: Workstation,
+    @JoinColumn(name = "workstation_id")
+    var workstation: Workstation? = null,
 
     @Column(nullable = false)
     val requesterUid: String,
@@ -24,7 +24,7 @@ class ServiceRequest(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val status: RequestStatus,
+    var status: RequestStatus,
 
     @Column
     val description: String?,

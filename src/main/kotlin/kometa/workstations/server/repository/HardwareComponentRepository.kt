@@ -18,10 +18,20 @@ interface HardwareComponentRepository : JpaRepository<HardwareComponent, Long> {
         serialNumber: String,
         pageable: Pageable
     ): Page<HardwareComponent>
+
+    fun findByModelContainingIgnoreCaseOrSerialNumberContainingIgnoreCase(
+        model: String,
+        serialNumber: String
+    ): List<HardwareComponent>
+
     fun findByTypeContainingIgnoreCaseAndStatus(
         type: String,
         status: ComponentStatus,
         pageable: Pageable
     ): Page<HardwareComponent>
 
+    fun findByTypeContainingIgnoreCaseAndStatus(
+        type: String,
+        status: ComponentStatus
+    ): List<HardwareComponent>
 }

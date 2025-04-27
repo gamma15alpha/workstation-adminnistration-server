@@ -36,10 +36,12 @@
       <label class="block text-gray-700 mb-2 mt-4">Серийный номер</label>
       <input type="text" th:field="*{serialNumber}" class="w-full p-2 border rounded bg-gray-50" />
 
-      <label class="block text-gray-700 mb-2 mt-4">Рабочая станция</label>
-      <select th:field="*{workstation}" class="w-full p-2 border rounded bg-gray-50">
-        <option value="">Без привязки</option>
-        <option th:each="ws : ${workstations}" th:value="${ws}" th:text="${ws.name}"></option>
+      <label class="block text-gray-700 mb-2 mt-4">Поиск рабочей станции:</label>
+      <input type="text" id="workstationSearch" placeholder="Введите имя или инвентарный номер..."
+             class="w-full p-2 border rounded bg-gray-50" />
+      <select id="workstationSelect" name="workstation.id"
+              class="w-full p-2 border rounded bg-gray-50 mt-2">
+        <option value="">Выберите станцию</option>
       </select>
     </div>
 
@@ -61,5 +63,43 @@
     </div>
   </form>
 </div>
+
+<script>
+  const searchInput = document.getElementById('workstationSearch');
+  const select = document.getElementById('workstationSelect');
+  let debounceTimer;
+
+  searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(() => {
+      const query = searchInput.value.trim();
+      if (query.length < 2) {
+        select.innerHTML = '<option value="">Введите больше символов</option>';
+        return;
+      }
+
+      fetch('/api/workstations/search?query=' + encodeURIComponent(query))
+              .then(response => response.json())
+              .then(data => {
+                select.innerHTML = '';
+                if (data.length === 0) {
+                  select.innerHTML = '<option value="">Не найдено</option>';
+                } else {
+                  data.forEach(ws => {
+                    const option = document.createElement('option');
+                    option.value = ws.id;
+                    option.textContent = `${ws.name} (${ws.inventoryNumber})`;
+                    select.appendChild(option);
+                  });
+                }
+              })
+              .catch(error => {
+                console.error('Ошибка поиска станций:', error);
+              });
+    }, 400);
+  });
+</script>
+
 </body>
 </html>

@@ -38,8 +38,18 @@ class HardwareComponentService(private val repository: HardwareComponentReposito
     }
 
     @Cacheable("hardwareComponents")
+    fun findByModelOrSerialNumber(query: String): List<HardwareComponent> {
+        return repository.findByModelContainingIgnoreCaseOrSerialNumberContainingIgnoreCase(query, query)
+    }
+
+    @Cacheable("hardwareComponents")
     fun findByTypeAndStatusPaginated(type: String, status: ComponentStatus, pageable: Pageable): Page<HardwareComponent> {
         return repository.findByTypeContainingIgnoreCaseAndStatus(type, status, pageable)
+    }
+
+    @Cacheable("hardwareComponents")
+    fun findByTypeAndStatus(type: String, status: ComponentStatus): List<HardwareComponent> {
+        return repository.findByTypeContainingIgnoreCaseAndStatus(type, status)
     }
 
     @Cacheable("hardwareComponents")
@@ -53,11 +63,11 @@ class HardwareComponentService(private val repository: HardwareComponentReposito
         val isLinkedToWorkstation = component.workstation != null
 
         if (component.status == ComponentStatus.INACTIVE && isLinkedToWorkstation) {
-            throw IllegalArgumentException("Невозможно установить статус 'Неактивный' для компонента, привязанного к рабочей станции")
+            component.status = ComponentStatus.ACTIVE
         }
 
         if (component.status == ComponentStatus.ACTIVE && !isLinkedToWorkstation) {
-            throw IllegalArgumentException("Невозможно установить статус 'Активный' для компонента без привязки к рабочей станции")
+            component.status = ComponentStatus.INACTIVE
         }
 
         return repository.save(component)

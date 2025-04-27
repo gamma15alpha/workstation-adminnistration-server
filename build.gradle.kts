@@ -44,6 +44,8 @@ dependencies {
 
     //️ Утилиты
     implementation("io.github.cdimascio:java-dotenv:5.2.2")
+    implementation("com.itextpdf:itext7-core:8.0.4")
+    implementation("com.opencsv:opencsv:5.10")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")

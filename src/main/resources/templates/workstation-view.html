@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Просмотр станции</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container mx-auto p-8">
+  <h1 class="text-3xl font-bold mb-6" th:text="'Просмотр станции: ' + ${workstation.name}"></h1>
+
+  <div class="bg-white p-6 rounded shadow-md mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Информация о станции</h2>
+    <p><strong>Инвентарный номер:</strong> <span th:text="${workstation.inventoryNumber}"></span></p>
+    <p><strong>Ответственный:</strong> <span th:text="${workstation.assignedUserUid}"></span></p>
+  </div>
+
+  <div class="bg-white p-6 rounded shadow-md mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Компоненты</h2>
+    <table class="w-full table-auto">
+      <thead>
+      <tr class="bg-gray-200">
+        <th class="p-2 text-left">Тип</th>
+        <th class="p-2 text-left">Модель</th>
+        <th class="p-2 text-left">Серийный номер</th>
+        <th class="p-2 text-left">Статус</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="component : ${components}">
+        <td class="p-2" th:text="${component.type}"></td>
+        <td class="p-2" th:text="${component.model}"></td>
+        <td class="p-2" th:text="${component.serialNumber ?: '-'}"></td>
+        <td class="p-2" th:text="${component.status.displayName}"></td>
+      </tr>
+      <tr th:if="${components.isEmpty()}">
+        <td class="p-2 text-center" colspan="4">Нет компонентов</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bg-white p-6 rounded shadow-md">
+    <h2 class="text-2xl font-semibold mb-4">Установленное ПО</h2>
+    <table class="w-full table-auto">
+      <thead>
+      <tr class="bg-gray-200">
+        <th class="p-2 text-left">Название</th>
+        <th class="p-2 text-left">Версия</th>
+        <th class="p-2 text-left">Срок действия лицензии</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="ws : ${installedSoftware}">
+        <td class="p-2" th:text="${ws.software.name}"></td>
+        <td class="p-2" th:text="${ws.software.version}"></td>
+        <td class="p-2">
+          <span th:if="${ws.software.expirationDate != null}" th:text="${#temporals.format(ws.software.expirationDate, 'dd.MM.yyyy')}"></span>
+          <span th:if="${ws.software.expirationDate == null}">Бессрочная</span>
+        </td>
+      </tr>
+      <tr th:if="${installedSoftware.isEmpty()}">
+        <td class="p-2 text-center" colspan="3">Нет установленного ПО</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-6">
+    <a th:href="@{/workstations}" class="bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700">Назад</a>
+  </div>
+
+  <div class="mt-6">
+    <a th:href="@{/workstations/pdf/{id}(id=${workstation.id})}" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+      Скачать PDF-отчёт
+    </a>
+  </div>
+</div>
+
+</body>
+</html>
