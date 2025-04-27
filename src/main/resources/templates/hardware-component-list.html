@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Аппаратные компоненты</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-6">Аппаратные компоненты</h1>
+
+  <!-- Форма поиска -->
+  <form method="get" th:action="@{/hardware-components}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <input type="text" name="search" th:value="${search}" placeholder="Поиск по модели или серийному номеру" class="p-2 border rounded bg-gray-50" />
+
+    <select name="type" class="p-2 border rounded bg-gray-50">
+      <option value="">Тип компонента</option>
+      <option value="ЦП" th:selected="${type == 'ЦП'}">ЦП</option>
+      <option value="ГП" th:selected="${type == 'ГП'}">ГП</option>
+      <option value="ОЗУ" th:selected="${type == 'ОЗУ'}">ОЗУ</option>
+      <option value="Память" th:selected="${type == 'Память'}">Память</option>
+      <option value="Сетевой адаптер" th:selected="${type == 'Сетевой адаптер'}">Сетевой адаптер</option>
+      <option value="БП" th:selected="${type == 'БП'}">БП</option>
+      <option value="Клавиатура" th:selected="${type == 'Клавиатура'}">Клавиатура</option>
+      <option value="Мышь" th:selected="${type == 'Мышь'}">Мышь</option>
+      <option value="Монитор" th:selected="${type == 'Монитор'}">Монитор</option>
+    </select>
+
+    <select name="status" class="p-2 border rounded bg-gray-50">
+      <option value="">Статус</option>
+      <option th:each="s : ${allStatuses}"
+              th:value="${s.displayName}"
+              th:text="${s.displayName}"
+              th:selected="${status == s.displayName}">
+      </option>
+    </select>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Поиск
+    </button>
+  </form>
+
+
+  <!-- Кнопка добавления для админа -->
+  <div class="mb-4" sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{/hardware-components/new}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+      + Добавить компонент
+    </a>
+  </div>
+
+  <!-- Таблица -->
+  <table class="w-full bg-white rounded shadow-md">
+    <thead class="bg-gray-200">
+    <tr>
+      <th class="p-2 text-left">
+        <a th:href="@{/hardware-components(page=${currentPage}, sortBy='type',
+        sortDir=${sortBy == 'type' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search})}">
+          Тип
+        </a>
+      </th>
+      <th class="p-2 text-left">
+        <a th:href="@{/hardware-components(page=${currentPage}, sortBy='model',
+        sortDir=${sortBy == 'model' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search})}">
+          Модель
+        </a>
+      </th>
+      <th class="p-2 text-left">
+        Серийный номер
+      </th>
+      <th class="p-2 text-left">
+        <a th:href="@{/hardware-components(page=${currentPage}, sortBy='status',
+        sortDir=${sortBy == 'status' and sortDir == 'asc' ? 'desc' : 'asc'}, search=${search})}">
+          Статус
+        </a>
+      </th>
+      <th class="p-2 text-left">Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${componentsPage.content}">
+      <td class="p-2" th:text="${c.type}"></td>
+      <td class="p-2" th:text="${c.model}"></td>
+      <td class="p-2" th:text="${c.serialNumber ?: '—'}"></td>
+      <td class="p-2" th:text="${c.status.displayName}"></td>
+      <td class="p-2 space-x-2">
+        <a th:href="@{'/hardware-components/edit/' + ${c.id}}" class="text-yellow-600 hover:underline" sec:authorize="hasRole('ADMIN')">
+          Редактировать
+        </a>
+        <a th:href="@{'/hardware-components/edit-status/' + ${c.id}}" class="text-blue-600 hover:underline" sec:authorize="hasRole('ENGINEER')">
+          Изменить статус
+        </a>
+        <form th:action="@{'/hardware-components/delete/' + ${c.id}}" method="post" class="inline" sec:authorize="hasRole('ADMIN')">
+          <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Удалить компонент?')">Удалить</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Пагинация -->
+  <div class="mt-6 flex justify-between items-center">
+    <span>Страница <span th:text="${componentsPage.number + 1}"></span> из
+      <span th:text="${componentsPage.totalPages}"></span></span>
+    <div class="space-x-4">
+      <a th:if="${componentsPage.hasPrevious()}"
+         th:href="@{/hardware-components(page=${componentsPage.number - 1},
+         size=${componentsPage.size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search})}"
+         class="text-blue-600 hover:underline">← Назад</a>
+
+      <a th:if="${componentsPage.hasNext()}"
+         th:href="@{/hardware-components(page=${componentsPage.number + 1},
+         size=${componentsPage.size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search})}"
+         class="text-blue-600 hover:underline">Вперёд →</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

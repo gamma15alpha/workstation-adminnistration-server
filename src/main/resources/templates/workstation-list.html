@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Рабочие станции</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6">Рабочие станции</h1>
+
+    <!-- Форма поиска -->
+    <form method="get" th:action="@{/workstations}" class="flex gap-4 mb-6">
+        <input type="text" name="search" th:value="${search}" placeholder="Имя станции или инвентарный номер" class="w-full p-2 border rounded bg-gray-50" />
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Поиск</button>
+    </form>
+
+    <!-- Кнопка создания только для Admin и Engineer -->
+    <div class="mb-4" th:if="${isAdmin or isEngineer}">
+        <a th:href="@{/workstations/new}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            + Добавить станцию
+        </a>
+    </div>
+
+    <!-- Таблица -->
+    <table class="w-full bg-white rounded shadow-md">
+        <thead class="bg-gray-200">
+        <tr>
+            <th class="p-2 text-left">Имя станции</th>
+            <th class="p-2 text-left">Инвентарный номер</th>
+            <th class="p-2 text-left">Пользователь</th>
+            <th class="p-2 text-left">Локация</th>
+            <th class="p-2 text-left">Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ws : ${workstationPage.content}">
+            <td class="p-2" th:text="${ws.name}"></td>
+            <td class="p-2" th:text="${ws.inventoryNumber}"></td>
+            <td class="p-2" th:text="${ws.assignedUserUid ?: '—'}"></td>
+            <td class="p-2" th:text="${ws.location.name ?: '—'}"></td>
+            <td class="p-2 space-x-2">
+                <!-- Редактировать доступно Admin или владельцу -->
+                <a th:href="@{'/workstations/edit/' + ${ws.id}}" class="text-yellow-600 hover:underline"
+                   th:if="${isAdmin or ws.assignedUserUid == #authentication.name}">
+                    Редактировать
+                </a>
+
+                <!-- Удалить только Admin -->
+                <form th:action="@{'/workstations/delete/' + ${ws.id}}" method="post" class="inline"
+                      th:if="${isAdmin}">
+                    <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Удалить станцию?')">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Пагинация -->
+    <div class="mt-6 flex justify-between items-center">
+        <span>Страница <span th:text="${workstationPage.number + 1}"></span> из <span th:text="${workstationPage.totalPages}"></span></span>
+        <div class="space-x-4">
+            <a th:if="${workstationPage.hasPrevious()}"
+               th:href="@{/workstations(page=${workstationPage.number - 1}, search=${search})}"
+               class="text-blue-600 hover:underline">← Назад</a>
+
+            <a th:if="${workstationPage.hasNext()}"
+               th:href="@{/workstations(page=${workstationPage.number + 1}, search=${search})}"
+               class="text-blue-600 hover:underline">Вперёд →</a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

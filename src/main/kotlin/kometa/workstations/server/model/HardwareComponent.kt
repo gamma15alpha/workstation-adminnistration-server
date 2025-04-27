@@ -12,8 +12,8 @@ class HardwareComponent(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workstation_id", nullable = false)
-    val workstation: Workstation,
+    @JoinColumn(name = "workstation_id")
+    val workstation: Workstation? = null,
 
     @Column(nullable = false)
     val type: String,
@@ -38,4 +38,10 @@ class HardwareComponent(
     )
 }
 
-enum class ComponentStatus { ACTIVE, INACTIVE, BROKEN }
+enum class ComponentStatus(
+    val displayName: String
+) {
+    ACTIVE("Используемый"),
+    INACTIVE("Неиспользуемый"),
+    BROKEN("Неисправный");
+}
