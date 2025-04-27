@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Установка ПО</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6">Установка ПО на станцию</h1>
+
+    <!-- Информация о выбранном ПО -->
+    <div class="bg-white p-6 rounded shadow-md space-y-4 mb-8">
+        <p><strong>Название:</strong> <span th:text="${software.name}"></span></p>
+        <p><strong>Версия:</strong> <span th:text="${software.version}"></span></p>
+        <p><strong>Лицензий всего:</strong> <span th:text="${software.licenseCount}"></span></p>
+        <p>
+            <strong>Срок действия:</strong>
+            <span th:if="${software.expirationDate != null}" th:text="${#temporals.format(software.expirationDate, 'dd.MM.yyyy')}"></span>
+            <span th:if="${software.expirationDate == null}">Бессрочная лицензия</span>
+        </p>
+    </div>
+
+    <!-- Форма выбора станции -->
+    <form th:action="@{/workstation-software/install}" method="post" class="space-y-6">
+        <input type="hidden" name="softwareId" th:value="${software.id}" />
+
+        <div>
+            <label class="block text-gray-700 mb-2">Поиск станции:</label>
+            <input type="text" id="workstationSearch" placeholder="Введите имя или инвентарный номер..."
+                   class="w-full p-2 border rounded bg-gray-50" />
+            <select id="workstationSelect" name="workstationId"
+                    class="w-full p-2 border rounded bg-gray-50 mt-2" required>
+                <option value="">Выберите станцию</option>
+            </select>
+        </div>
+
+        <div class="flex gap-4">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Установить ПО</button>
+            <a th:href="@{/software}" class="bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700">Отмена</a>
+        </div>
+    </form>
+
+    <!-- Ошибка -->
+    <div th:if="${param.error}" class="mt-6 text-red-600 font-bold">
+        <p th:text="${param.error}"></p>
+    </div>
+</div>
+
+<!-- Скрипт поиска станций -->
+<script>
+    const searchInput = document.getElementById('workstationSearch');
+    const select = document.getElementById('workstationSelect');
+    let debounceTimer;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(() => {
+            const query = searchInput.value.trim();
+            if (query.length < 2) {
+                select.innerHTML = '<option value="">Введите больше символов</option>';
+                return;
+            }
+
+            fetch('/api/workstations/search?query=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    select.innerHTML = '';
+                    if (data.length === 0) {
+                        select.innerHTML = '<option value="">Не найдено</option>';
+                    } else {
+                        data.forEach(ws => {
+                            const option = document.createElement('option');
+                            option.value = ws.id;
+                            option.textContent = `${ws.name} (${ws.inventoryNumber})`;
+                            select.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка поиска станций:', error);
+                });
+        }, 400); // Задержка 400 мс
+    });
+</script>
+
+
+</body>
+</html>

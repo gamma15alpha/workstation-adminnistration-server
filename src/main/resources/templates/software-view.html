@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>Просмотр ПО</title>
@@ -18,9 +18,17 @@
       <strong>Ключ:</strong>
       <span th:text="${software.licenseKey != null ? software.licenseKey : 'Не требуется'}"></span>
     </p>
+
+
     <p>
-      <strong>Количество лицензий:</strong>
-      <span th:text="${software.licenseCount != null ? software.licenseCount : 'Нет ограничений'}"></span>
+      <strong>Всего лицензий:</strong> <span th:text="${software.licenseCount}"></span>
+      <span th:if="${software.licenseCount == 0}" class="text-sm text-gray-500">(без ограничений)</span>
+    </p>
+    <p th:if="${software.licenseCount > 0}">
+      <strong>Использовано лицензий:</strong> <span th:text="${usedLicenses}"></span>
+    </p>
+    <p th:if="${software.licenseCount > 0}">
+      <strong>Доступно лицензий:</strong> <span th:text="${software.licenseCount - usedLicenses}"></span>
     </p>
 
     <p>
@@ -36,12 +44,26 @@
     </p>
   </div>
 
+  <div class="mt-8"
+       th:if="${canInstall}"
+       sec:authorize="hasAnyRole('ADMIN', 'ENGINEER')">
+    <a th:href="@{'/workstation-software/install?softwareId=' + ${software.id}}"
+       class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+      Установить на станцию
+    </a>
+  </div>
+
+  <div class="mt-8" th:if="${!canInstall}">
+    <p class="text-red-600 font-bold">
+      Установка невозможна: нет лицензий, срок действия истёк или недостаточно прав.
+    </p>
+  </div>
+
+
   <div class="mt-6">
     <a th:href="@{/software}" class="text-blue-600 hover:underline">← Назад к списку</a>
   </div>
 </div>
-
-<div th:replace="~{footer :: footer}"></div>
 </body>
 
 <footer>

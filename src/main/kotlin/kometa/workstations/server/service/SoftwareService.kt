@@ -2,6 +2,7 @@ package kometa.workstations.server.service
 
 import kometa.workstations.server.model.Software
 import kometa.workstations.server.repository.SoftwareRepository
+import kometa.workstations.server.repository.WorkstationSoftwareRepository
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class SoftwareService(private val repository: SoftwareRepository) {
+class SoftwareService(
+    private val repository: SoftwareRepository,
+    private val workstationSoftwareService: WorkstationSoftwareService,
+) {
     @Cacheable("software")
     fun findById(id: Long): Software? {
         return repository.findById(id).orElse(null)
@@ -29,6 +33,17 @@ class SoftwareService(private val repository: SoftwareRepository) {
     @Cacheable("software")
     fun findByNamePaginated(name: String, pageable: Pageable): Page<Software> {
         return repository.findByNameContainingIgnoreCase(name, pageable)
+    }
+
+    fun canInstall(software: Software): Boolean {
+        if (software.licenseCount == null) return true
+        val used = workstationSoftwareService.countBySoftware(software)
+        return used < software.licenseCount
+    }
+
+    @Cacheable("software")
+    fun countUsedLicenses(software: Software): Long {
+        return workstationSoftwareService.countBySoftware(software)
     }
 
 

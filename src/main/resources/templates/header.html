@@ -9,43 +9,83 @@
 </head>
 <body>
 <header th:fragment="header" class="bg-white shadow-md">
-  <nav class="container mx-auto flex justify-between items-center p-4">
+  <nav class="container mx-auto flex items-center justify-between p-4">
 
-    <!-- Логотип по ролям -->
+    <!-- Левая часть: логотип -->
     <div class="text-xl font-bold text-gray-900">
-      <a th:href="@{/}" sec:authorize="hasRole('ADMIN')" class="hover:text-blue-600">Админ-панель</a>
-      <a th:href="@{/}" sec:authorize="hasRole('MANAGER')" class="hover:text-green-600">Панель менеджера</a>
-      <a th:href="@{/}" sec:authorize="hasRole('ENGINEER')" class="hover:text-purple-600">Станции инженера</a>
-      <a th:href="@{/}" sec:authorize="isAnonymous()" class="hover:text-gray-600">Гость</a>
+      <a th:href="@{/'/'}" class="hover:text-blue-600">Система учета рабочих станций</a>
     </div>
 
-    <!-- Навигация по ролям -->
-    <div class="space-x-4 text-center text-base font-medium">
+    <!-- Центр: навигация -->
+    <div class="flex space-x-6 items-center">
 
-      <!-- Общая вкладка для инженера и админа -->
       <a th:href="@{/workstations}" class="text-blue-600 hover:text-blue-800"
-         sec:authorize="hasAnyRole('ENGINEER', 'ADMIN')">Рабочие станции</a>
+         sec:authorize="hasAnyRole('ADMIN', 'ENGINEER', 'MANAGER')">
+        Рабочие станции
+      </a>
 
-      <!-- Менеджер тоже видит рабочие станции -->
-      <a th:href="@{/workstations}" class="text-blue-600 hover:text-blue-800"
-         sec:authorize="hasRole('MANAGER')">Просмотр станций</a>
-
-      <!-- ПО доступно всем ролям, но только админ может редактировать -->
       <a th:href="@{/software}" class="text-blue-600 hover:text-blue-800"
-         sec:authorize="hasAnyRole('ADMIN', 'ENGINEER', 'MANAGER')">Программное обеспечение</a>
+         sec:authorize="hasAnyRole('ADMIN', 'ENGINEER', 'MANAGER')">
+        Программное обеспечение
+      </a>
+
+      <!-- Выпадающее меню "Управление" только для ADMIN -->
+      <div class="relative" sec:authorize="hasRole('ADMIN')">
+        <button id="managementToggle" class="flex items-center text-blue-600 hover:text-blue-800 focus:outline-none">
+          Управление
+          <svg id="arrowIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transition-transform duration-300"
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div id="managementMenu" class="absolute hidden mt-2 bg-white border rounded shadow-md z-50 transition-all duration-300">
+          <a th:href="@{/admin/users}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full">
+            Пользователи
+          </a>
+          <a th:href="@{/locations}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full">
+            Локации
+          </a>
+        </div>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const toggleButton = document.getElementById('managementToggle');
+          const menu = document.getElementById('managementMenu');
+          const arrowIcon = document.getElementById('arrowIcon');
+
+          toggleButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            if (menu.classList.contains('hidden')) {
+              menu.classList.remove('hidden');
+              arrowIcon.classList.add('rotate-180');
+            } else {
+              menu.classList.add('hidden');
+              arrowIcon.classList.remove('rotate-180');
+            }
+          });
+
+          document.addEventListener('click', function(event) {
+            if (!menu.classList.contains('hidden') && !toggleButton.contains(event.target)) {
+              menu.classList.add('hidden');
+              arrowIcon.classList.remove('rotate-180');
+            }
+          });
+        });
+      </script>
 
     </div>
 
-    <!-- Авторизация -->
-    <div>
-      <a th:href="@{/login}" class="text-blue-600 hover:text-blue-800"
-         sec:authorize="isAnonymous()">Войти</a>
+    <!-- Правая часть: приветствие и выход -->
+    <div class="flex items-center space-x-4">
+      <span class="text-gray-700" sec:authorize="isAuthenticated()" th:text="${'Добро пожаловать, ' + #authentication.name}"></span>
 
-      <span class="text-gray-700" sec:authorize="isAuthenticated()" th:text="${#authentication.name}">username</span>
+      <a th:href="@{/logout}" class="text-red-600 hover:text-red-800" sec:authorize="isAuthenticated()">Выход</a>
 
-      <a th:href="@{/logout}" class="text-red-600 hover:text-red-800 ml-3"
-         sec:authorize="isAuthenticated()">Выход</a>
+      <a th:href="@{/login}" class="text-blue-600 hover:text-blue-800" sec:authorize="isAnonymous()">Войти</a>
     </div>
+
   </nav>
 </header>
 </body>

@@ -10,4 +10,8 @@ import org.springframework.stereotype.Repository
 interface WorkstationRepository : JpaRepository<Workstation, Long> {
     fun findByNameContainingIgnoreCase(name: String): List<Workstation>
     fun findByAssignedUserUid(assignedUser: String): List<Workstation>
+    fun findByNameContainingIgnoreCaseOrInventoryNumberContainingIgnoreCase(
+        name: String,
+        inventoryNumber: String
+    ): List<Workstation>
 }

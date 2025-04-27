@@ -26,6 +26,12 @@ class WorkstationService(private val repository: WorkstationRepository) {
     }
 
     @Cacheable("workstations")
+    fun searchByNameOrInventory(query: String): List<Workstation> {
+        return repository.findByNameContainingIgnoreCaseOrInventoryNumberContainingIgnoreCase(query, query)
+    }
+
+
+    @Cacheable("workstations")
     fun findByAssignedUser(assignedUser: String): List<Workstation> {
         return repository.findByAssignedUserUid(assignedUser)
     }

@@ -4,6 +4,7 @@ import kometa.workstations.server.model.Software
 import kometa.workstations.server.service.SoftwareService
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import java.time.LocalDate
 
 @Controller
 @RequestMapping("/software")
@@ -69,7 +71,18 @@ class SoftwareController(
     @GetMapping("/view/{id}")
     fun view(@PathVariable id: Long, model: Model): String {
         val software = softwareService.findById(id) ?: throw IllegalArgumentException("ПО не найдено")
+        val usedLicenses = softwareService.countUsedLicenses(software)
+
+        val hasAvailableLicenses = software.licenseCount == null || usedLicenses < software.licenseCount
+        val isLicenseExpired = software.expirationDate?.isBefore(LocalDate.now()) ?: false
+
+        val canInstall = hasAvailableLicenses && !isLicenseExpired
+
         model.addAttribute("software", software)
+        model.addAttribute("usedLicenses", usedLicenses)
+        model.addAttribute("canInstall", canInstall)
+
         return "software-view"
     }
+
 }
