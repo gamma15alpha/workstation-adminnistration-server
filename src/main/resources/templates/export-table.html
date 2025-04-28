@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Экспорт таблицы</title>
+</head>
+<body>
+<h1>Экспорт таблицы</h1>
+<form method="post" action="/admin/export-table">
+  <label for="tableName">Выберите таблицу для экспорта:</label>
+  <select name="tableName" id="tableName">
+    <option th:each="table : ${tables}" th:value="${table}" th:text="${table}"></option>
+  </select>
+  <button type="submit">Экспортировать</button>
+</form>
+</body>
+</html>

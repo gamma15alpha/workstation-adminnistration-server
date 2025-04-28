@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Импорт таблицы</title>
+</head>
+<body>
+<h1>Импорт таблицы</h1>
+<form method="post" action="/admin/import-table" enctype="multipart/form-data">
+  <label for="tableName">Выберите таблицу для импорта:</label>
+  <select name="tableName" id="tableName">
+    <option th:each="table : ${tables}" th:value="${table}" th:text="${table}"></option>
+  </select>
+  <label for="file">Выберите файл для импорта:</label>
+  <input type="file" name="file" id="file" required />
+  <button type="submit">Импортировать</button>
+</form>
+<div th:if="${message}">
+  <p th:text="${message}"></p>
+</div>
+</body>
+</html>

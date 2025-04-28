@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Логи</title>
+</head>
+<body>
+<h1>Логи</h1>
+<form method="get" action="/logs">
+    <input type="text" name="search" value="${search}" placeholder="Поиск...">
+    <button type="submit">Поиск</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>Имя пользователя</th>
+        <th>Действие</th>
+        <th>Тип сущности</th>
+        <th>ID сущности</th>
+        <th>Время</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="log : ${logsPage.content}">
+        <td th:text="${log.username}"></td>
+        <td th:text="${log.action}"></td>
+        <td th:text="${log.entityType}"></td>
+        <td th:text="${log.entityId}"></td>
+        <td th:text="${log.timestamp}"></td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <button th:if="${logsPage.hasPrevious()}" th:href="@{/logs?page=${currentPage - 1}}">Предыдущая</button>
+    <button th:if="${logsPage.hasNext()}" th:href="@{/logs?page=${currentPage + 1}}">Следующая</button>
+</div>
+</body>
+</html>

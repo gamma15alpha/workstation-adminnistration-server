@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Бэкапы</title>
+</head>
+<body>
+<h1>Управление бэкапами</h1>
+
+<form method="post" action="/admin/create-backup">
+  <button type="submit">Создать новый бэкап</button>
+</form>
+
+<h2>Существующие бэкапы:</h2>
+<ul>
+  <li th:each="backup : ${backups}">
+    <span th:text="${backup}"></span>
+    <form method="post" action="/admin/restore-backup" style="display:inline;">
+      <input type="hidden" name="backupFileName" th:value="${backup}" />
+      <button type="submit">Восстановить</button>
+    </form>
+    <form method="post" action="/admin/delete-backup" style="display:inline;">
+      <input type="hidden" name="backupFileName" th:value="${backup}" />
+      <button type="submit">Удалить</button>
+    </form>
+  </li>
+</ul>
+</body>
+</html>
