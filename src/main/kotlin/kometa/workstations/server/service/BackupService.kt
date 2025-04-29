@@ -43,7 +43,7 @@ class BackupService(
         return try {
             ProcessBuilder(dumpCommand).start().waitFor()
             ProcessBuilder(copyCommand).start().waitFor()
-            "Резервная копия создана: $backupFile"
+            "backup: $backupFile"
         } catch (e: IOException) {
             "Error: ${e.message}"
         }
@@ -95,13 +95,13 @@ class BackupService(
 
         val file = File(filePath)
         if (!file.exists()) {
-            return "Ошибка: файл резервной копии не найден"
+            return "No File Found"
         }
 
         return if (file.delete()) {
-            "Резервная копия $backupFileName удалена"
+            "Backup $backupFileName deleted"
         } else {
-            "Ошибка: не удалось удалить резервную копию $backupFileName"
+            "Error: $backupFileName"
         }
     }
 

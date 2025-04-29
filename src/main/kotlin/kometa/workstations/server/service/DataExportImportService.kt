@@ -52,7 +52,7 @@ class DataExportImportService(
             ProcessBuilder(copyCommand).start().waitFor()
             FileSystemResource(File(exportFile))
         } catch (e: IOException) {
-            throw RuntimeException("Ошибка экспорта SQL: ${e.message}")
+            throw RuntimeException("Error SQL exporting: ${e.message}")
         }
     }
 
@@ -65,7 +65,7 @@ class DataExportImportService(
 
         // Проверяем, что файл успешно сохранился
         if (!tempFile.exists()) {
-            return "Ошибка: файл не был сохранён (${tempFile.absolutePath})"
+            return "File not saved (${tempFile.absolutePath})"
         }
 
         // Копируем файл SQL в контейнер Docker
@@ -88,12 +88,12 @@ class DataExportImportService(
 
 
             if (tempFile.delete()) {
-                "Таблица $tableName успешно импортирована, файл ${tempFile.name} удалён"
+                "Table $tableName import successful"
             } else {
-                "Таблица $tableName импортирована, но файл ${tempFile.name} не удалось удалить"
+                "Table $tableName import successful"
             }
         } catch (e: IOException) {
-            "Ошибка импорта SQL: ${e.message}"
+            "Error SQL import: ${e.message}"
         }
     }
 
@@ -119,7 +119,7 @@ class DataExportImportService(
             ProcessBuilder(copyCommand).start().waitFor()
             FileSystemResource(File(exportFile))
         } catch (e: IOException) {
-            throw RuntimeException("Ошибка экспорта CSV: ${e.message}")
+            throw RuntimeException("Error CSV export: ${e.message}")
         }
     }
 
@@ -131,7 +131,7 @@ class DataExportImportService(
         tempFile.outputStream().use { file.inputStream.copyTo(it) }
 
         if (!tempFile.exists()) {
-            return "Ошибка: файл не был сохранён (${tempFile.absolutePath})"
+            return "File not saved (${tempFile.absolutePath})"
         }
 
         val copyCommand = listOf(
@@ -147,9 +147,9 @@ class DataExportImportService(
         return try {
             ProcessBuilder(copyCommand).start().waitFor()
             ProcessBuilder(importCommand).start().waitFor()
-            "CSV импортирован в $tableName из ${tempFile.name}"
+            "CSV imported in $tableName from ${tempFile.name}"
         } catch (e: IOException) {
-            "Ошибка импорта CSV: ${e.message}"
+            "Error in CSV import: ${e.message}"
         }
     }
 }
